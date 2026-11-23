@@ -35,10 +35,10 @@ android {
 
     defaultConfig {
         applicationId = "com.displaymac.client"
-        minSdk = 29 // Android 10 (Q) and newer
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        minSdk = 26 // Android 8.0 Oreo and newer (ensures 100% compatibility across all Samsung tablets including S7 FE)
+        targetSdk = 34
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
