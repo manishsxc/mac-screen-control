@@ -35,7 +35,7 @@ jobs:
 
   macos:
     name: macOS Host (Swift Build/Test & CoreAudio Driver)
-    runs-on: macos-14
+    runs-on: macos-13
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4

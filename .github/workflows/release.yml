@@ -32,7 +32,7 @@ jobs:
 
   build-macos:
     name: Build macOS Application
-    runs-on: macos-14
+    runs-on: macos-13
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
               <key>CFBundleShortVersionString</key>
               <string>1.0</string>
               <key>LSMinimumSystemVersion</key>
-              <string>14.0</string>
+              <string>12.3</string>
               <key>NSHighResolutionCapable</key>
               <true/>
           </dict>
@@ -92,10 +92,11 @@ jobs:
         with:
           name: DisplayMac-macOS-App
           path: artifacts/
-      - name: Publish Release
+      - name: Publish Release (Always on Push or Tag)
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
+          tag_name: "v1.0.0"
+          name: "DisplayMac v1.0.0"
           files: |
             artifacts/*.apk
             artifacts/DisplayMac-macOS.zip
