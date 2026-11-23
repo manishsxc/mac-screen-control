@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "DisplayMacServer",
     platforms: [
-        .macOS(.v14)
+        .macOS("12.3") // ScreenCaptureKit was introduced in macOS 12.3 Monterey and supported on Ventura (13), Sonoma (14), Sequoia (15), Tahoe (26), Golden Gate (27+)
     ],
     products: [
         .executable(

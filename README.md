@@ -32,7 +32,7 @@ git push -u origin main
 ## git push on existing repository 
 ```bash
 git add .
-git commit -m "Fix: footer fix and add pages Shipping Policy,Refund Policy,Contact"
+git commit -m "Fix: "
 git push
 ```
 

@@ -166,9 +166,13 @@ public final class ScreenCaptureEngine: NSObject, SCStreamOutput, SCStreamDelega
 
         if type == .screen {
             delegate?.captureEngine(self, didCaptureSampleBuffer: sampleBuffer)
-        } else if type == .audio {
-            if let pcm16Data = extractPCM16Data(from: sampleBuffer) {
-                delegate?.captureEngine(self, didCaptureAudioData: pcm16Data)
+        } else {
+            if #available(macOS 13.0, *) {
+                if type == .audio {
+                    if let pcm16Data = extractPCM16Data(from: sampleBuffer) {
+                        delegate?.captureEngine(self, didCaptureAudioData: pcm16Data)
+                    }
+                }
             }
         }
     }

@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId = "com.displaymac.client"
-        minSdk = 26
+        minSdk = 29 // Android 10 (Q) and newer
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
@@ -44,6 +44,14 @@ android {
     }
 
     signingConfigs {
+        // Universal debug-keystore signing for seamless installation on any Android device
+        getByName("debug") {
+            // Default android debug keystore signs automatically with V1 + V2 + V3
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = true
+        }
+
         if (hasReleaseSigning) {
             create("release") {
                 val resolvedStoreFile = rootProject.file(releaseStoreFilePath!!)
@@ -62,16 +70,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
             if (hasReleaseSigning) {
                 signingConfig = signingConfigs.getByName("release")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
             }
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 

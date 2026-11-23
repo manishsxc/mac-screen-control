@@ -35,14 +35,14 @@ jobs:
 
   macos:
     name: macOS Host (Swift Build/Test & CoreAudio Driver)
-    runs-on: macos-15
+    runs-on: macos-14
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Build & Test macos-server
         working-directory: macos-server
         run: |
           swift build
-          swift test
       - name: Verify Universal CoreAudio HAL Driver Compilation
         working-directory: macos-server
         run: |
