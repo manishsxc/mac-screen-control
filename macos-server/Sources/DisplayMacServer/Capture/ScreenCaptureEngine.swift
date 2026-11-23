@@ -41,27 +41,52 @@ public final class ScreenCaptureEngine: NSObject, SCStreamOutput, SCStreamDelega
         let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
         var targets: [ShareableTarget] = []
 
-        // Displays
+        // Displays (Entire Screen - captures all active applications, windows, and desktop seamlessly)
         for (index, display) in content.displays.enumerated() {
             targets.append(ShareableTarget(
                 id: "display_\(display.displayID)",
-                name: "Entire Screen \(index + 1) (\(display.width)x\(display.height))",
+                name: "🖥️ Entire Screen \(index + 1) (All Windows & Desktop)",
                 isDisplay: true,
                 displayID: display.displayID
             ))
         }
 
-        // Windows (only visible user windows with titles)
+        // Clean user application windows only (Filtering out internal macOS background elements)
+        let ignoredBundles: Set<String> = [
+            "com.apple.dock",
+            "com.apple.controlcenter",
+            "com.apple.notificationcenterui",
+            "com.apple.WindowManager",
+            "com.apple.wallpaper",
+            "com.apple.systemuiserver",
+            "com.displaymac.app"
+        ]
+
+        let ignoredTitles: Set<String> = [
+            "Wallpaper",
+            "Offscreen Wallpaper Window",
+            "Display 1 Backstop",
+            "Display 2 Backstop",
+            "Focus",
+            "Clock I",
+            "Status",
+            "Forecast",
+            "Month"
+        ]
+
         for window in content.windows {
-            guard let title = window.title, !title.isEmpty,
-                  window.frame.width > 100, window.frame.height > 100,
+            guard let title = window.title?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !title.isEmpty,
+                  window.frame.width >= 200, window.frame.height >= 200,
+                  window.isOnScreen,
                   let app = window.owningApplication,
-                  app.bundleIdentifier != "com.apple.dock",
-                  app.bundleIdentifier != "com.apple.controlcenter" else { continue }
+                  !ignoredBundles.contains(app.bundleIdentifier),
+                  !ignoredTitles.contains(title),
+                  !title.hasPrefix("Notification Center") else { continue }
 
             targets.append(ShareableTarget(
                 id: "window_\(window.windowID)",
-                name: "\(app.applicationName): \(title)",
+                name: "🪟 \(app.applicationName): \(title)",
                 isDisplay: false,
                 windowID: window.windowID,
                 appName: app.applicationName

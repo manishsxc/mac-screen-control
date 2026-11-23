@@ -18,7 +18,7 @@ data class AndroidUpdateInfo(
 
 object AndroidUpdateChecker {
     private const val TAG = "UpdateChecker"
-    const val CURRENT_VERSION = "1.0.0"
+    const val CURRENT_VERSION = "1.1.0"
     const val REPO_OWNER = "sumitkumar"
     const val REPO_NAME = "DisplayMac"
 

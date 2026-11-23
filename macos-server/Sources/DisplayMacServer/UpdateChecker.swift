@@ -9,7 +9,7 @@ public struct AppUpdateInfo {
 
 public final class UpdateChecker {
     public static let shared = UpdateChecker()
-    public static let currentVersion = "1.0.0"
+    public static let currentVersion = "1.1.0"
     public static let repoOwner = "sumitkumar"
     public static let repoName = "DisplayMac"
 

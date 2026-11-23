@@ -53,8 +53,8 @@ jobs:
       - name: Publish Release (Direct on Push or Tag)
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: "v1.0.0"
-          name: "DisplayMac v1.0.0 (macOS 26/27+ & Android 10+)"
+          tag_name: "v1.1.0"
+          name: "DisplayMac v1.1.0 (macOS 26/27+ & Android 10+)"
           files: |
             artifacts/*.apk
             artifacts/DisplayMac-macOS.zip
