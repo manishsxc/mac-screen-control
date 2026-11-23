@@ -34,38 +34,25 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.displaymac.client"
-        minSdk = 26 // Android 8.0 Oreo and newer (ensures 100% compatibility across all Samsung tablets including S7 FE)
+        applicationId = "com.displaymac.remote"
+        minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
-        // Universal debug-keystore signing for seamless installation on any Android device
-        getByName("debug") {
-            // Default android debug keystore signs automatically with V1 + V2 + V3
+        create("universal") {
+            storeFile = rootProject.file("displaymac-debug.jks")
+            storePassword = "android"
+            keyAlias = "displaymac"
+            keyPassword = "android"
             enableV1Signing = true
             enableV2Signing = true
             enableV3Signing = true
-        }
-
-        if (hasReleaseSigning) {
-            create("release") {
-                val resolvedStoreFile = rootProject.file(releaseStoreFilePath!!)
-                require(resolvedStoreFile.exists()) {
-                    "Configured release keystore not found: ${resolvedStoreFile.absolutePath}"
-                }
-                storeFile = resolvedStoreFile
-                storePassword = releaseStorePassword
-                keyAlias = releaseKeyAlias
-                keyPassword = releaseKeyPassword
-                enableV1Signing = true
-                enableV2Signing = true
-                enableV3Signing = true
-            }
+            enableV4Signing = false
         }
     }
 
@@ -73,16 +60,12 @@ android {
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("universal")
         }
         release {
-            if (hasReleaseSigning) {
-                signingConfig = signingConfigs.getByName("release")
-            } else {
-                signingConfig = signingConfigs.getByName("debug")
-            }
             isMinifyEnabled = false
             isShrinkResources = false
+            signingConfig = signingConfigs.getByName("universal")
         }
     }
 
