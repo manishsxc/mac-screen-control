@@ -32,7 +32,7 @@ jobs:
 
   build-macos:
     name: Build macOS Application
-    runs-on: macos-13
+    runs-on: macos-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
               <key>CFBundleShortVersionString</key>
               <string>1.0</string>
               <key>LSMinimumSystemVersion</key>
-              <string>12.3</string>
+              <string>26.0</string>
               <key>NSHighResolutionCapable</key>
               <true/>
           </dict>
