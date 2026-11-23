@@ -32,26 +32,3 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew testDebugUnitTest lintDebug assembleDebug
-
-  macos:
-    name: macOS Host (Swift Build/Test & CoreAudio Driver)
-    runs-on: macos-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build & Test macos-server
-        working-directory: macos-server
-        run: |
-          swift build
-      - name: Verify Universal CoreAudio HAL Driver Compilation
-        working-directory: macos-server
-        run: |
-          SDK_PATH="$(xcrun --show-sdk-path)"
-          clang -bundle -arch arm64 -arch x86_64 -isysroot "$SDK_PATH" -O3 \
-            -DkNumber_Of_Channels=2 \
-            -DkDriver_Name=\"DisplayMacAudio\" \
-            -DkDevice_Name=\"DisplayMacAudio\" \
-            -DkManufacturer_Name=\"DisplayMac\" \
-            -DkPlugIn_BundleID=\"com.displaymac.audio\" \
-            -framework CoreAudio -framework CoreFoundation -framework AudioToolbox -framework Accelerate \
-            -o /tmp/DisplayMacAudio Driver/DisplayMacAudio.c

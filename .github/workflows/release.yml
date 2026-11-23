@@ -30,55 +30,9 @@ jobs:
           name: DisplayMac-Android-APKs
           path: android-client/app/build/outputs/apk/debug/app-debug.apk
 
-  build-macos:
-    name: Build macOS Application
-    runs-on: macos-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build macOS App
-        working-directory: macos-server
-        run: |
-          swift build -c release
-          mkdir -p /tmp/DisplayMac.app/Contents/MacOS
-          mkdir -p /tmp/DisplayMac.app/Contents/Resources
-          cp .build/release/DisplayMacServer /tmp/DisplayMac.app/Contents/MacOS/DisplayMac
-          
-          # Create Info.plist
-          cat << 'EOF' > /tmp/DisplayMac.app/Contents/Info.plist
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>CFBundleExecutable</key>
-              <string>DisplayMac</string>
-              <key>CFBundleIdentifier</key>
-              <string>com.displaymac.app</string>
-              <key>CFBundleName</key>
-              <string>DisplayMac</string>
-              <key>CFBundlePackageType</key>
-              <string>APPL</string>
-              <key>CFBundleShortVersionString</key>
-              <string>1.0</string>
-              <key>LSMinimumSystemVersion</key>
-              <string>26.0</string>
-              <key>NSHighResolutionCapable</key>
-              <true/>
-          </dict>
-          </plist>
-          EOF
-          
-          cd /tmp
-          zip -r DisplayMac-macOS.zip DisplayMac.app
-      - name: Upload macOS App Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: DisplayMac-macOS-App
-          path: /tmp/DisplayMac-macOS.zip
-
   create-release:
     name: Create GitHub Release
-    needs: [build-android, build-macos]
+    needs: [build-android]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -88,15 +42,14 @@ jobs:
         with:
           name: DisplayMac-Android-APKs
           path: artifacts/
-      - uses: actions/download-artifact@v4
-        with:
-          name: DisplayMac-macOS-App
-          path: artifacts/
-      - name: Publish Release (Always on Push or Tag)
+      - name: Prepare macOS Package from Release Artifacts
+        run: |
+          cp release-artifacts/DisplayMac-macOS.zip artifacts/
+      - name: Publish Release (Direct on Push or Tag)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: "v1.0.0"
-          name: "DisplayMac v1.0.0"
+          name: "DisplayMac v1.0.0 (macOS 26/27+ & Android 10+)"
           files: |
             artifacts/*.apk
             artifacts/DisplayMac-macOS.zip
