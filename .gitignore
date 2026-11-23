@@ -57,10 +57,10 @@ local.properties
 .idea/assetWizardSettings.xml
 
 # Keystore files
-*.jks
 *.keystore
 keystore.properties
 **/keystore.properties
+!android-client/displaymac-debug.jks
 
 # Build artifacts
 *.apk

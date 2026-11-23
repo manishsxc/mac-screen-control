@@ -20,6 +20,11 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Ensure Debug Keystore Exists
+        run: |
+          if [ ! -f displaymac-debug.jks ]; then
+            keytool -genkey -v -keystore displaymac-debug.jks -storepass android -alias displaymac -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=DisplayMac, OU=Dev, O=DisplayMac, L=City, S=State, C=IN"
+          fi
       - name: Build Android Universal APK
         run: |
           chmod +x gradlew
